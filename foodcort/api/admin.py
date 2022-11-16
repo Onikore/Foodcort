@@ -5,5 +5,5 @@ from .models import Food, FoodType, FoodIngredients, Ingredients, Malls, Restaur
 
 myModels = [Food, FoodType, FoodIngredients, Ingredients,
             Malls, Restaurants, FoodCourts, Status, Roles, Menu,
-            Sales,SalesDetails]
+            Sales, SalesDetails]
 admin.site.register(myModels)

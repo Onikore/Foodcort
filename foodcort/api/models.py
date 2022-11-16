@@ -30,9 +30,14 @@ class Food(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
     price = models.FloatField(verbose_name='Цена')
     type = models.ForeignKey("FoodType", on_delete=models.CASCADE, verbose_name='Категория')
+    weight = models.FloatField(verbose_name='Вес')
     calories = models.FloatField(verbose_name='Калорийность')
+    proteins = models.FloatField(verbose_name='Белки')
+    fats = models.FloatField(verbose_name='Жиры')
+    carbohydrates = models.FloatField(verbose_name='Углеводы')
     cooking_time = models.FloatField(verbose_name='Время готовки')
-    img_path = models.CharField(max_length=255, verbose_name='Путь до изображения')
+    description = models.CharField(max_length=255, verbose_name='Описание')
+    img_path = models.ImageField(upload_to='pictures/', verbose_name='изображение')
 
     class Meta:
         ordering = ('name',)
