@@ -15,7 +15,7 @@ class Ingredients(models.Model):
 
 
 class FoodType(models.Model):
-    name = models.CharField(max_length=50, verbose_name='категория')
+    name = models.CharField(max_length=50, db_index=True, verbose_name='категория')
 
     class Meta:
         ordering = ('name',)
