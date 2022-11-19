@@ -1,11 +1,12 @@
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.models import Food, Restaurants, Menu
 
 
-class GetAllFood(APIView):
-    def get(self, request):
+class GetAllFood(ListAPIView):
+    def get(self, request, **kwargs):
         all_food = list(Food.objects.all().values().order_by('id'))
         restaurants = list(Restaurants.objects.all().values().order_by('id'))
         for i in restaurants:
@@ -21,5 +22,5 @@ class GetFoodImages(APIView):
         # TODO: отправка JSON с картинками в виде BASE64
         #  пример
         #  "img_name" : "encoded_img"
-        pass
+        return Response({'err': 'not implemented'})
 
