@@ -1,3 +1,6 @@
+import base64
+from pathlib import Path
+
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -19,8 +22,10 @@ class GetAllFood(ListAPIView):
 
 class GetFoodImages(APIView):
     def get(self, request):
-        # TODO: отправка JSON с картинками в виде BASE64
-        #  пример
-        #  "img_name" : "encoded_img"
-        return Response({'err': 'not implemented'})
-
+        # Получается слишком тяжелый JSON
+        # переписать так, чтобы отдавалось по 1 картинке
+        res = {}
+        for path in Path(r'C:\Users\Вип\Desktop\teamproject\foodcort\pictures').iterdir():
+            with open(path, 'rb') as f:
+                res[str(path.name)] = base64.b64encode(f.read())
+        return Response(res)
