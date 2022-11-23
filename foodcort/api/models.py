@@ -113,18 +113,6 @@ class Status(models.Model):
         return self.name
 
 
-class Roles(models.Model):
-    name = models.CharField(max_length=50, verbose_name='Роль пользователя')
-
-    class Meta:
-        ordering = ('name',)
-        verbose_name = 'роль'
-        verbose_name_plural = 'роли'
-
-    def __str__(self):
-        return self.name
-
-
 class Menu(models.Model):
     restaurant = models.ForeignKey('Restaurants', on_delete=models.CASCADE, verbose_name='Ресторан')
     food = models.ForeignKey('Food', on_delete=models.CASCADE, verbose_name='Блюдо')
