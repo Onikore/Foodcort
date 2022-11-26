@@ -76,8 +76,12 @@ class Restaurants(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
     opening = models.TimeField(verbose_name='Время открытия')
     closing = models.TimeField(verbose_name='Время закрытия')
+    min_price = models.FloatField(verbose_name='', default=250.0)
+    max_price = models.FloatField(verbose_name='', default=500.0)
     lat = models.FloatField(verbose_name='Широта')
     lon = models.FloatField(verbose_name='Долгота')
+    rating = models.FloatField(verbose_name='Рейтинг', default=5.0)
+    description = models.CharField(max_length=255, verbose_name='Описание', default='', null=True)
 
     class Meta:
         ordering = ('name',)
@@ -98,7 +102,7 @@ class FoodCourts(models.Model):
         verbose_name_plural = 'фудкорты'
 
     def __str__(self):
-        return f'{self.mall_id} {self.restaurant_id} {self.floor}'
+        return f'{self.mall} {self.restaurant} {self.floor}'
 
 
 class Status(models.Model):
@@ -122,7 +126,7 @@ class Menu(models.Model):
         verbose_name_plural = 'меню'
 
     def __str__(self):
-        return f'{self.restaurant_id} {self.food_id}'
+        return f'{self.restaurant} {self.food}'
 
 
 class Sales(models.Model):
@@ -147,3 +151,6 @@ class SalesDetails(models.Model):
     class Meta:
         verbose_name = 'Детали заказа'
         verbose_name_plural = 'Детали заказов'
+
+    def __str__(self):
+        return f'Детали заказа {self.sale} {self.food}'
