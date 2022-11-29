@@ -29,15 +29,16 @@ class FoodType(models.Model):
 class Food(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
     price = models.FloatField(verbose_name='Цена')
-    type = models.ForeignKey("FoodType", on_delete=models.CASCADE, verbose_name='Категория')
+    type = models.ForeignKey("FoodType", related_name='type', on_delete=models.CASCADE, verbose_name='Категория')
     weight = models.FloatField(verbose_name='Вес')
     calories = models.FloatField(verbose_name='Калорийность')
     proteins = models.FloatField(verbose_name='Белки')
     fats = models.FloatField(verbose_name='Жиры')
     carbohydrates = models.FloatField(verbose_name='Углеводы')
+    ingredients = models.ManyToManyField("Ingredients", related_name='ingredients')
     cooking_time = models.FloatField(verbose_name='Время готовки')
     description = models.CharField(max_length=255, verbose_name='Описание')
-    img_path = models.ImageField(upload_to='pictures/', verbose_name='изображение')
+    food_pic = models.ImageField(upload_to='pictures/', verbose_name='изображение')
 
     class Meta:
         ordering = ('name',)
@@ -48,20 +49,13 @@ class Food(models.Model):
         return self.name
 
 
-class FoodIngredients(models.Model):
-    food = models.ForeignKey("Food", on_delete=models.CASCADE)
-    ingredient = models.ForeignKey("Ingredients", on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name_plural = 'состав блюда'
-
-
 class Malls(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
     lat1 = models.FloatField(verbose_name='Широта 1')
     lon1 = models.FloatField(verbose_name='Долгота 1')
     lat2 = models.FloatField(verbose_name='Широта 2')
     lon2 = models.FloatField(verbose_name='Долгота 2')
+    restaurants = models.ManyToManyField('Restaurants', related_name='restaurants')
 
     class Meta:
         ordering = ('name',)
@@ -82,6 +76,8 @@ class Restaurants(models.Model):
     lon = models.FloatField(verbose_name='Долгота')
     rating = models.FloatField(verbose_name='Рейтинг', default=5.0)
     description = models.CharField(max_length=255, verbose_name='Описание', default='', null=True)
+    rest_pic = models.ImageField(upload_to='pictures/', verbose_name='изображение', default=' ')
+    food = models.ManyToManyField('Food', related_name='food')
 
     class Meta:
         ordering = ('name',)
@@ -90,19 +86,6 @@ class Restaurants(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class FoodCourts(models.Model):
-    mall = models.ForeignKey('Malls', on_delete=models.CASCADE, verbose_name='Торговый центр')
-    restaurant = models.ForeignKey('Restaurants', on_delete=models.CASCADE, verbose_name='Ресторан')
-    floor = models.IntegerField(verbose_name='Этаж')
-
-    class Meta:
-        verbose_name = 'фудкорт'
-        verbose_name_plural = 'фудкорты'
-
-    def __str__(self):
-        return f'{self.mall} {self.restaurant} {self.floor}'
 
 
 class Status(models.Model):
@@ -115,18 +98,6 @@ class Status(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Menu(models.Model):
-    restaurant = models.ForeignKey('Restaurants', on_delete=models.CASCADE, verbose_name='Ресторан')
-    food = models.ForeignKey('Food', on_delete=models.CASCADE, verbose_name='Блюдо')
-
-    class Meta:
-        verbose_name = 'меню'
-        verbose_name_plural = 'меню'
-
-    def __str__(self):
-        return f'{self.restaurant} {self.food}'
 
 
 class Sales(models.Model):
