@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 
 from api.views import GetFoodAPI, GetFoodImages, GetSalesAPI
+from yasg_config import yasg_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,3 +14,4 @@ urlpatterns = [
     path('api/v1/auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]
+urlpatterns.extend(yasg_urls)
