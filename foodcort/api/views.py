@@ -1,6 +1,4 @@
-import base64
-from pathlib import Path
-
+from django.http import FileResponse
 from rest_framework.generics import ListAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -21,14 +19,12 @@ class GetFoodAPI(ListAPIView):
 
 
 class GetFoodImages(APIView):
-    def get(self, request):
-        # Получается слишком тяжелый JSON
-        # переписать так, чтобы отдавалось по 1 картинке
-        res = {}
-        for path in Path(r'C:\Users\Вип\Desktop\teamproject\foodcort\pictures').iterdir():
-            with open(path, 'rb') as f:
-                res[str(path.name)] = base64.b64encode(f.read())
-        return Response(res)
+    def get(self, request, **kwargs):
+        file_name = kwargs.get("name")
+        try:
+            return FileResponse(open(f'pictures/{file_name}', 'rb'))
+        except FileNotFoundError:
+            return Response({'error': 'FileNotFound'})
 
 
 class GetSalesAPI(ListCreateAPIView):

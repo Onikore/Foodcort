@@ -10,7 +10,7 @@ urlpatterns = [
     path('api/v1/food/<int:id>/', GetFoodAPI.as_view()),
     path('api/v1/sales/', GetSalesAPI.as_view()),
     path('api/v1/sales/<int:id>/', GetSalesAPI.as_view()),
-    path('api/v1/pictures/', GetFoodImages.as_view()),
+    path('pictures/<str:name>', GetFoodImages.as_view()),
     path('api/v1/auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]
