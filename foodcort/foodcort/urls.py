@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/v1/sales/', GetSalesAPI.as_view()),
     path('api/v1/sales/<int:id>/', GetSalesAPI.as_view()),
     path('pictures/<str:name>', GetFoodImages.as_view()),
-    path('api/v1/auth/', include('djoser.urls')),
+    path('auth/v1/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]
 urlpatterns.extend(yasg_urls)
