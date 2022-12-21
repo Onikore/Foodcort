@@ -70,8 +70,10 @@ class Restaurants(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
     opening = models.TimeField(verbose_name='Время открытия')
     closing = models.TimeField(verbose_name='Время закрытия')
-    min_price = models.FloatField(verbose_name='', default=250.0)
-    max_price = models.FloatField(verbose_name='', default=500.0)
+    min_price = models.FloatField(verbose_name='Минимальный чек', default=250.0)
+    max_price = models.FloatField(verbose_name='Максимальный чек', default=500.0)
+    mall = models.CharField(verbose_name='торговый центр', default='ТЦ Гринвич', max_length=50)
+    floor = models.IntegerField(verbose_name='Этаж', default=1)
     lat = models.FloatField(verbose_name='Широта')
     lon = models.FloatField(verbose_name='Долгота')
     rating = models.FloatField(verbose_name='Рейтинг', default=5.0)
@@ -107,21 +109,25 @@ class Sales(models.Model):
     status = models.ForeignKey('Status', on_delete=models.CASCADE, verbose_name='Статус')
     deadline = models.FloatField(verbose_name='Дедлайн')
     price = models.FloatField(verbose_name='Цена')
+    details = models.ManyToManyField('Food', through='SaleDetails')
 
     class Meta:
         ordering = ('date_time',)
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
+    def __str__(self):
+        return f"Заказ номер: {self.pk}"
 
-class SalesDetails(models.Model):
-    sale = models.ForeignKey('Sales', on_delete=models.CASCADE, verbose_name='Заказ')
+
+class SaleDetails(models.Model):
     food = models.ForeignKey('Food', on_delete=models.CASCADE, verbose_name='Блюдо')
-    portion_count = models.IntegerField(verbose_name='Количество порций')
+    sale = models.ForeignKey('Sales', on_delete=models.CASCADE, verbose_name='Заказ')
+    amount = models.IntegerField(verbose_name='Количество', default=1)
 
     class Meta:
         verbose_name = 'Детали заказа'
-        verbose_name_plural = 'Детали заказов'
+        verbose_name_plural = 'Детали заказа'
 
     def __str__(self):
-        return f'Детали заказа {self.sale} {self.food}'
+        return f"{self.sale}, Блюдо: {self.food}, Кол-во: {self.amount}"

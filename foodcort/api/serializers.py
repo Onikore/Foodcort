@@ -1,18 +1,24 @@
 from rest_framework import serializers
 
-from .models import Food, Sales, Ingredients, FoodType, Restaurants, Malls
+from .models import Food, Ingredients, FoodType, Restaurants, Malls, Status, Sales, SaleDetails
 
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredients
-        fields = '__all__'
+        fields = ('name',)
+
+    def to_representation(self, instance):
+        return str(instance)
 
 
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodType
         fields = ('name',)
+
+    def to_representation(self, instance):
+        return str(instance)
 
 
 class FoodSerializer(serializers.ModelSerializer):
@@ -37,7 +43,7 @@ class RestaurantsSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'opening',
                   'closing', 'lat', 'lon',
                   'description', 'max_price', 'min_price',
-                  'rating', 'food', 'rest_pic',)
+                  'rating', 'rest_pic', 'floor', 'mall', 'food',)
 
 
 class MallSerializer(serializers.ModelSerializer):
@@ -50,7 +56,31 @@ class MallSerializer(serializers.ModelSerializer):
                   'restaurants')
 
 
+class StatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Status
+        fields = ('name',)
+
+    def to_representation(self, instance):
+        return str(instance)
+
+
+class SaleDetailsSerializer(serializers.ModelSerializer):
+    food = FoodSerializer(read_only=True)
+
+    class Meta:
+        model = SaleDetails
+        fields = ('food', 'amount',)
+
+
 class SalesSerializer(serializers.ModelSerializer):
+    # restaurant = RestaurantsSerializer()
+
+    status = StatusSerializer()
+    details = SaleDetailsSerializer(many=True, source='saledetails_set')
+
     class Meta:
         model = Sales
-        fields = '__all__'
+        fields = ('id', 'date_time', 'deadline',
+                  'price', 'restaurant_id', 'status',
+                  'user_id', 'details')
